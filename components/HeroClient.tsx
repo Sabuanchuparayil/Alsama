@@ -157,7 +157,6 @@ export default function HeroClient() {
           <p className="text-xl md:text-2xl mb-8 text-gray-200 leading-relaxed">
             {hero.subtitle}
           </p>
-          {hero.buttonLink && (
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
               href="/book"
@@ -165,14 +164,15 @@ export default function HeroClient() {
             >
               📅 Book Now
             </Link>
-            <Link
-              href={hero.buttonLink || '/fleet'}
-              className="inline-block red-gradient text-white px-8 py-4 rounded-md text-lg font-semibold hover:shadow-lg transition-all transform hover:scale-105 shadow-md text-center"
-            >
-              {hero.buttonText || 'EXPLORE OUR FLEET'}
-            </Link>
+            {hero.buttonLink && (
+              <Link
+                href={hero.buttonLink || '/fleet'}
+                className="inline-block red-gradient text-white px-8 py-4 rounded-md text-lg font-semibold hover:shadow-lg transition-all transform hover:scale-105 shadow-md text-center"
+              >
+                {hero.buttonText || 'EXPLORE OUR FLEET'}
+              </Link>
+            )}
           </div>
-          )}
         </div>
       </div>
     </section>
