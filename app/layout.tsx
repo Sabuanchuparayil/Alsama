@@ -67,7 +67,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <LayoutWrapper>{children}</LayoutWrapper>
         <WhatsAppChat 
-          phoneNumber="+97141234567"
           message="Hello! I would like to inquire about your luxury chauffeur services."
           position="bottom-right"
           showOnMobile={true}

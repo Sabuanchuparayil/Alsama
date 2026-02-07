@@ -36,12 +36,16 @@ export default function WhatsAppChat({
   };
 
   const handleWhatsAppClick = () => {
+    if (!whatsappNumber) {
+      console.warn('WhatsApp number not configured. Please update in admin settings.');
+      return;
+    }
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   };
 
-  if (!isVisible) return null;
+  if (!isVisible || !whatsappNumber) return null;
 
   const positionClasses = position === 'bottom-right' 
     ? 'bottom-6 right-6' 
