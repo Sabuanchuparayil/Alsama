@@ -1,0 +1,34 @@
+User-agent: *
+Allow: /
+
+# Crawl-delay to prevent server overload
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://alsama.ae/sitemap.xml
+
+# Block admin and API routes
+Disallow: /admin/
+Disallow: /api/
+
+# Allow specific API endpoints that might be needed
+Allow: /api/cms/hero
+Allow: /api/cms/vehicles
+Allow: /api/cms/services
+Allow: /api/cms/homepage-sections
+
+# Block sensitive files
+Disallow: /*.pdf$
+Disallow: /*.doc$
+Disallow: /*.docx$
+
+# Block search parameters
+Disallow: /*?*
+
+# Allow important pages
+Allow: /$
+Allow: /about
+Allow: /fleet
+Allow: /services
+Allow: /contact
+Allow: /book
