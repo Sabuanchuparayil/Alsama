@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Fallback: Save to local public directory (for development/testing)
-    // In production, you should use Supabase, AWS S3, Cloudinary, or similar
+    // In production, Cloudinary should be configured for image storage
     if (process.env.NODE_ENV === 'development') {
       const fs = await import('fs/promises');
       const path = await import('path');

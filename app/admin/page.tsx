@@ -88,8 +88,18 @@ export default async function AdminDashboard() {
             </div>
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-md">
               <span className="text-gray-700">Image Storage</span>
-              <span className={`px-2 py-1 rounded text-xs ${process.env.SUPABASE_URL ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                {process.env.SUPABASE_URL ? 'Configured' : 'Not Configured'}
+              <span className={`px-2 py-1 rounded text-xs ${
+                process.env.CLOUDINARY_CLOUD_NAME && 
+                process.env.CLOUDINARY_API_KEY && 
+                process.env.CLOUDINARY_API_SECRET
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-yellow-100 text-yellow-800'
+              }`}>
+                {process.env.CLOUDINARY_CLOUD_NAME && 
+                 process.env.CLOUDINARY_API_KEY && 
+                 process.env.CLOUDINARY_API_SECRET
+                  ? 'Configured (Cloudinary)' 
+                  : 'Not Configured'}
               </span>
             </div>
           </div>
