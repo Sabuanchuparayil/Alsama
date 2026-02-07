@@ -12,6 +12,9 @@ const heroSchema = z.object({
   backgroundImageUrl: z.string().url().optional().nullable(),
   overlayOpacity: z.number().min(0).max(1).optional().default(0.4),
   isActive: z.boolean().optional().default(true),
+  enableCarousel: z.boolean().optional().default(false),
+  carouselInterval: z.number().int().min(1000).max(30000).optional().default(5000),
+  carouselImages: z.array(z.string().url()).optional().default([]),
 });
 
 export async function GET(request: NextRequest) {
@@ -26,6 +29,9 @@ export async function GET(request: NextRequest) {
         backgroundImageUrl: true,
         overlayOpacity: true,
         isActive: true,
+        enableCarousel: true,
+        carouselInterval: true,
+        carouselImages: true,
       },
       where: { isActive: true },
       orderBy: { updatedAt: 'desc' },
@@ -41,6 +47,9 @@ export async function GET(request: NextRequest) {
         backgroundImageUrl: null,
         overlayOpacity: 0.4,
         isActive: true,
+        enableCarousel: false,
+        carouselInterval: 5000,
+        carouselImages: [],
       });
     }
 
@@ -65,6 +74,9 @@ export async function GET(request: NextRequest) {
       backgroundImageUrl: null,
       overlayOpacity: 0.4,
       isActive: true,
+      enableCarousel: false,
+      carouselInterval: 5000,
+      carouselImages: [],
     });
   }
 }

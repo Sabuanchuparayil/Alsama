@@ -10,11 +10,15 @@ interface HeroContent {
   buttonLink: string;
   backgroundImageUrl: string | null;
   overlayOpacity: number;
+  enableCarousel?: boolean;
+  carouselInterval?: number;
+  carouselImages?: string[];
 }
 
 export default function HeroClient() {
   const [hero, setHero] = useState<HeroContent | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     fetch('/api/cms/hero')
@@ -32,10 +36,27 @@ export default function HeroClient() {
           buttonLink: '/fleet',
           backgroundImageUrl: null,
           overlayOpacity: 0.4,
+          enableCarousel: false,
+          carouselInterval: 5000,
+          carouselImages: [],
         });
         setLoading(false);
       });
   }, []);
+
+  // Carousel effect
+  useEffect(() => {
+    if (!hero?.enableCarousel || !hero.carouselImages || hero.carouselImages.length <= 1) {
+      return;
+    }
+
+    const interval = hero.carouselInterval || 5000;
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % hero.carouselImages!.length);
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [hero?.enableCarousel, hero?.carouselImages, hero?.carouselInterval]);
 
   if (loading || !hero) {
     return (
@@ -52,22 +73,52 @@ export default function HeroClient() {
     );
   }
 
+  // Determine background image
+  const getBackgroundImage = () => {
+    if (hero.enableCarousel && hero.carouselImages && hero.carouselImages.length > 0) {
+      return hero.carouselImages[currentImageIndex];
+    }
+    return hero.backgroundImageUrl;
+  };
+
+  const backgroundImage = getBackgroundImage();
+  const hasImages = hero.enableCarousel && hero.carouselImages && hero.carouselImages.length > 0;
+
   return (
     <section 
       className="relative text-white py-20 md:py-32 overflow-hidden"
       style={{
-        backgroundImage: hero.backgroundImageUrl 
-          ? `url(${hero.backgroundImageUrl})` 
+        backgroundImage: backgroundImage 
+          ? `url(${backgroundImage})` 
           : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        transition: hero.enableCarousel ? 'background-image 1s ease-in-out' : undefined,
       }}
     >
-      {!hero.backgroundImageUrl && (
+      {!backgroundImage && (
         <div className="absolute inset-0 red-black-gradient"></div>
       )}
-      {hero.backgroundImageUrl ? (
+      {backgroundImage ? (
         <>
+          {/* Carousel images overlay */}
+          {hero.enableCarousel && hero.carouselImages && hero.carouselImages.length > 1 && (
+            <div className="absolute inset-0">
+              {hero.carouselImages.map((image, index) => (
+                <div
+                  key={index}
+                  className={`absolute inset-0 transition-opacity duration-1000 ${
+                    index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{
+                    backgroundImage: `url(${image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                />
+              ))}
+            </div>
+          )}
           <div 
             className="absolute inset-0 bg-black"
             style={{ opacity: hero.overlayOpacity }}
@@ -79,6 +130,24 @@ export default function HeroClient() {
           className="absolute inset-0 bg-black"
           style={{ opacity: hero.overlayOpacity }}
         ></div>
+      )}
+      
+      {/* Carousel indicators */}
+      {hero.enableCarousel && hero.carouselImages && hero.carouselImages.length > 1 && (
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-2">
+          {hero.carouselImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`h-2 rounded-full transition-all ${
+                index === currentImageIndex 
+                  ? 'bg-white w-8' 
+                  : 'bg-white/50 w-2 hover:bg-white/75'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
       )}
       <div className="container mx-auto px-4 relative z-10 animate-fade-in">
         <div className="max-w-3xl">

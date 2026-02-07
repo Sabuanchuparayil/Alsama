@@ -18,6 +18,8 @@ model User {
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
+  passwordResets PasswordResetToken[]
+
   @@map("users")
 }
 
@@ -97,6 +99,21 @@ model Media {
   @@map("media")
 }
 
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
+  @@index([token])
+  @@index([userId])
+}
+
 model HeroContent {
   id          String   @id @default(cuid())
   title       String
@@ -106,6 +123,10 @@ model HeroContent {
   backgroundImageUrl String? @map("background_image_url")
   overlayOpacity Float  @default(0.4) @map("overlay_opacity")
   isActive    Boolean  @default(true) @map("is_active")
+  // Carousel settings
+  enableCarousel Boolean @default(false) @map("enable_carousel")
+  carouselInterval Int   @default(5000) @map("carousel_interval") // milliseconds
+  carouselImages  String[] @default([]) @map("carousel_images") // Array of image URLs
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 

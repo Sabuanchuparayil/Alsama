@@ -70,9 +70,44 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ url: publicUrl, id: media.id });
     }
 
-    // Fallback: Return a placeholder URL (in production, you'd want to use a proper storage solution)
+    // Fallback: Save to local public directory (for development/testing)
+    // In production, you should use Supabase, AWS S3, Cloudinary, or similar
+    if (process.env.NODE_ENV === 'development') {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      
+      try {
+        const publicDir = path.join(process.cwd(), 'public', 'uploads');
+        await fs.mkdir(publicDir, { recursive: true });
+        
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const filePath = path.join(publicDir, fileName);
+        
+        const arrayBuffer = await file.arrayBuffer();
+        await fs.writeFile(filePath, Buffer.from(arrayBuffer));
+        
+        const publicUrl = `/uploads/${fileName}`;
+        
+        // Save to media table
+        const media = await prisma.media.create({
+          data: {
+            url: publicUrl,
+            filename: fileName,
+            type: 'image',
+          },
+        });
+        
+        return NextResponse.json({ url: publicUrl, id: media.id });
+      } catch (fsError) {
+        console.error('Local file save error:', fsError);
+      }
+    }
+    
+    // Production fallback: Return error with helpful message
     return NextResponse.json({
-      error: 'Image storage not configured. Please set SUPABASE_URL and SUPABASE_KEY environment variables.',
+      error: 'Image storage not configured. Please set SUPABASE_URL and SUPABASE_KEY environment variables, or use a cloud storage service like AWS S3, Cloudinary, or similar.',
+      hint: 'For Railway deployment, configure Supabase Storage or add a cloud storage service.',
     }, { status: 500 });
   } catch (error) {
     console.error('Upload error:', error);

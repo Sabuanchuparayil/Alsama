@@ -12,6 +12,9 @@ interface HeroContent {
   backgroundImageUrl: string | null;
   overlayOpacity: number;
   isActive: boolean;
+  enableCarousel?: boolean;
+  carouselInterval?: number;
+  carouselImages?: string[];
 }
 
 export default function HeroManagementPage() {
@@ -24,6 +27,9 @@ export default function HeroManagementPage() {
     backgroundImageUrl: null,
     overlayOpacity: 0.4,
     isActive: true,
+    enableCarousel: false,
+    carouselInterval: 5000,
+    carouselImages: [],
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -241,6 +247,119 @@ export default function HeroManagementPage() {
             className="w-full"
           />
           <p className="text-sm text-gray-600 mt-1">Adjust the darkness of the overlay on the background image</p>
+        </div>
+
+        <div className="border-t pt-6 space-y-4">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Carousel Settings</h3>
+          
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="enableCarousel"
+              checked={hero.enableCarousel || false}
+              onChange={(e) => setHero({ ...hero, enableCarousel: e.target.checked })}
+              className="w-4 h-4 text-luxury-red border-gray-300 rounded focus:ring-luxury-red"
+            />
+            <label htmlFor="enableCarousel" className="ml-2 text-gray-700">
+              Enable Image Carousel (Slideshow)
+            </label>
+          </div>
+
+          {hero.enableCarousel && (
+            <>
+              <div>
+                <label htmlFor="carouselInterval" className="block text-gray-700 font-semibold mb-2">
+                  Carousel Interval: {hero.carouselInterval || 5000}ms
+                </label>
+                <input
+                  type="range"
+                  id="carouselInterval"
+                  min="2000"
+                  max="10000"
+                  step="500"
+                  value={hero.carouselInterval || 5000}
+                  onChange={(e) => setHero({ ...hero, carouselInterval: parseInt(e.target.value) })}
+                  className="w-full"
+                />
+                <p className="text-sm text-gray-600 mt-1">Time between image transitions (2-10 seconds)</p>
+              </div>
+
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Carousel Images
+                </label>
+                <div className="space-y-2">
+                  {(hero.carouselImages || []).map((image, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={image}
+                        onChange={(e) => {
+                          const newImages = [...(hero.carouselImages || [])];
+                          newImages[index] = e.target.value;
+                          setHero({ ...hero, carouselImages: newImages });
+                        }}
+                        className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red"
+                        placeholder="https://example.com/image.jpg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newImages = (hero.carouselImages || []).filter((_, i) => i !== index);
+                          setHero({ ...hero, carouselImages: newImages });
+                        }}
+                        className="px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHero({ ...hero, carouselImages: [...(hero.carouselImages || []), ''] });
+                    }}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm"
+                  >
+                    + Add Image URL
+                  </button>
+                  <div className="flex items-center gap-4 mt-2">
+                    <span className="text-sm text-gray-500">OR upload:</span>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploading(true);
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        try {
+                          const res = await fetch('/api/upload/image', {
+                            method: 'POST',
+                            body: formData,
+                          });
+                          if (res.ok) {
+                            const data = await res.json();
+                            setHero({ ...hero, carouselImages: [...(hero.carouselImages || []), data.url] });
+                          }
+                        } catch (error) {
+                          console.error('Upload error:', error);
+                        } finally {
+                          setUploading(false);
+                        }
+                      }}
+                      disabled={uploading}
+                      className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-luxury-red file:text-white hover:file:bg-luxury-red-dark"
+                    />
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">
+                  Add multiple images for carousel. Images will transition automatically.
+                </p>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="flex items-center">
