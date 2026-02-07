@@ -41,7 +41,7 @@ export default function ServicesClient({ limit }: ServicesClientProps) {
             slug: s.slug || s.id,
             description: s.description || '',
             features: s.features || [],
-            image: s.imageUrl || '/images/placeholder.jpg',
+            image: s.imageUrl || '',
           }));
         
         // Use API data if available, otherwise use defaults

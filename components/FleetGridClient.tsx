@@ -39,7 +39,7 @@ export default function FleetGridClient({ limit }: FleetGridClientProps) {
             name: v.name,
             category: v.category,
             description: v.description || '',
-            image: v.imageUrl || '/images/placeholder.jpg',
+            image: v.imageUrl || '',
           }));
         
         // Use API data if available, otherwise use defaults

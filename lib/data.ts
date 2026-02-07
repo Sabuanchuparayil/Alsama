@@ -20,63 +20,63 @@ export const vehicles: Vehicle[] = [
     id: '1',
     name: 'Mercedes-Benz S-Class',
     category: 'Sedan',
-    image: '/images/mercedes-s-class.jpg',
+    image: '', // Image will be managed via CMS
     description: 'Ultimate luxury sedan with premium comfort and advanced technology.',
   },
   {
     id: '2',
     name: 'BMW 7 Series',
     category: 'Sedan',
-    image: '/images/bmw-7-series.jpg',
+    image: '', // Image will be managed via CMS
     description: 'Sophisticated elegance meets cutting-edge innovation.',
   },
   {
     id: '3',
     name: 'Rolls-Royce Phantom',
     category: 'Sedan',
-    image: '/images/rolls-royce-phantom.jpg',
+    image: '', // Image will be managed via CMS
     description: 'The pinnacle of luxury motoring.',
   },
   {
     id: '4',
     name: 'Range Rover',
     category: 'SUV',
-    image: '/images/range-rover.jpg',
+    image: '', // Image will be managed via CMS
     description: 'Luxury SUV with exceptional comfort and capability.',
   },
   {
     id: '5',
     name: 'Mercedes-Benz G-Class',
     category: 'SUV',
-    image: '/images/mercedes-g-class.jpg',
+    image: '', // Image will be managed via CMS
     description: 'Iconic luxury SUV with legendary off-road capability.',
   },
   {
     id: '6',
     name: 'Bentley Bentayga',
     category: 'SUV',
-    image: '/images/bentley-bentayga.jpg',
+    image: '', // Image will be managed via CMS
     description: 'Ultra-luxury SUV combining performance and refinement.',
   },
   {
     id: '7',
     name: 'Ferrari F8 Tributo',
     category: 'Sports',
-    image: '/images/ferrari-f8.jpg',
+    image: '', // Image will be managed via CMS
     description: 'Exhilarating performance meets Italian craftsmanship.',
   },
   {
     id: '8',
     name: 'Lamborghini Huracán',
     category: 'Sports',
-    image: '/images/lamborghini-huracan.jpg',
+    image: '', // Image will be managed via CMS
     description: 'Pure Italian supercar excellence.',
   },
   {
     id: '9',
     name: 'Porsche 911',
     category: 'Sports',
-    image: '/images/porsche-911.jpg',
+    image: '', // Image will be managed via CMS
     description: 'Timeless sports car with legendary performance.',
   },
 ];
@@ -93,7 +93,7 @@ export const services: Service[] = [
       'Luggage assistance',
       '24/7 availability',
     ],
-    image: '/images/airport-transfer.jpg',
+    image: '', // Image will be managed via CMS
   },
   {
     id: '2',
@@ -106,7 +106,7 @@ export const services: Service[] = [
       'Flexible scheduling',
       'Premium vehicles',
     ],
-    image: '/images/city-tours.jpg',
+    image: '', // Image will be managed via CMS
   },
   {
     id: '3',
@@ -119,7 +119,7 @@ export const services: Service[] = [
       'Long-term contracts',
       'Dedicated account manager',
     ],
-    image: '/images/corporate-hire.jpg',
+    image: '', // Image will be managed via CMS
   },
   {
     id: '4',
@@ -132,7 +132,7 @@ export const services: Service[] = [
       'Multiple vehicle options',
       'Special packages',
     ],
-    image: '/images/wedding-services.jpg',
+    image: '', // Image will be managed via CMS
   },
 ];
 

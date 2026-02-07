@@ -46,7 +46,7 @@ export default function FleetGrid({ vehicles }: FleetGridProps) {
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div className="relative h-64 bg-gray-200 overflow-hidden">
-              {vehicle.image && vehicle.image !== '/images/placeholder.jpg' ? (
+              {vehicle.image && vehicle.image.trim() !== '' && vehicle.image !== '/images/placeholder.jpg' ? (
                 <Image
                   src={vehicle.image}
                   alt={vehicle.name}
@@ -60,7 +60,7 @@ export default function FleetGrid({ vehicles }: FleetGridProps) {
                   }}
                 />
               ) : null}
-              <div className={`placeholder absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 ${vehicle.image && vehicle.image !== '/images/placeholder.jpg' ? 'hidden' : ''}`}>
+              <div className={`placeholder absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 ${vehicle.image && vehicle.image.trim() !== '' && vehicle.image !== '/images/placeholder.jpg' ? 'hidden' : ''}`}>
                 <div className="text-center">
                   <svg className="w-12 h-12 text-gray-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
