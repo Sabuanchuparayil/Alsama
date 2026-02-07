@@ -12,6 +12,7 @@ const contactInfoSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().min(1, 'Phone number is required'),
   whatsapp: z.string().min(1, 'WhatsApp number is required'),
+  whatsappMessage: z.string().min(1, 'WhatsApp message is required').optional(),
   address: z.string().min(1, 'Address is required'),
 });
 
@@ -29,6 +30,7 @@ export async function GET(request: NextRequest) {
         email: 'info@alsama.ae',
         phone: '+971 4 123 4567',
         whatsapp: '+971 50 123 4567',
+        whatsappMessage: 'Hello! I would like to inquire about your luxury chauffeur services.',
         address: 'Dubai, United Arab Emirates',
       });
     }
@@ -45,10 +47,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       email: 'info@alsama.ae',
       phone: '+971 4 123 4567',
-      whatsapp: '+971 50 123 4567',
-      address: 'Dubai, United Arab Emirates',
-    });
-  }
+        whatsapp: '+971 50 123 4567',
+        whatsappMessage: 'Hello! I would like to inquire about your luxury chauffeur services.',
+        address: 'Dubai, United Arab Emirates',
+      });
+    }
 }
 
 export async function PUT(request: NextRequest) {

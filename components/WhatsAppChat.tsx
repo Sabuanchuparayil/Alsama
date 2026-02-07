@@ -13,12 +13,13 @@ interface WhatsAppChatProps {
 
 export default function WhatsAppChat({ 
   phoneNumber, 
-  message = 'Hello! I would like to inquire about your luxury chauffeur services.',
+  message,
   position = 'bottom-right',
   showOnMobile = true 
 }: WhatsAppChatProps) {
   const contactInfo = useContactInfo();
   const whatsappNumber = phoneNumber || contactInfo.whatsapp;
+  const chatMessage = message || contactInfo.whatsappMessage || 'Hello! I would like to inquire about your luxury chauffeur services.';
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -40,7 +41,7 @@ export default function WhatsAppChat({
       console.warn('WhatsApp number not configured. Please update in admin settings.');
       return;
     }
-    const encodedMessage = encodeURIComponent(message);
+    const encodedMessage = encodeURIComponent(chatMessage);
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   };

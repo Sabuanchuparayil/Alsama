@@ -7,6 +7,7 @@ export interface ContactInfo {
   email: string;
   phone: string;
   whatsapp: string;
+  whatsappMessage?: string;
   address: string;
 }
 
@@ -14,6 +15,7 @@ const defaultContactInfo: ContactInfo = {
   email: 'info@alsama.ae',
   phone: '+971 4 123 4567',
   whatsapp: '+971 50 123 4567',
+  whatsappMessage: 'Hello! I would like to inquire about your luxury chauffeur services.',
   address: 'Dubai, United Arab Emirates',
 };
 

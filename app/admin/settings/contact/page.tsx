@@ -7,6 +7,7 @@ interface ContactInfo {
   email: string;
   phone: string;
   whatsapp: string;
+  whatsappMessage?: string;
   address: string;
 }
 
@@ -16,6 +17,7 @@ export default function ContactSettingsPage() {
     email: '',
     phone: '',
     whatsapp: '',
+    whatsappMessage: 'Hello! I would like to inquire about your luxury chauffeur services.',
     address: '',
   });
   const [loading, setLoading] = useState(true);
@@ -162,6 +164,27 @@ export default function ContactSettingsPage() {
         </div>
 
         <div>
+          <label htmlFor="whatsappMessage" className="block text-gray-700 font-semibold mb-2">
+            WhatsApp Chat Message *
+          </label>
+          <textarea
+            id="whatsappMessage"
+            value={contactInfo.whatsappMessage || ''}
+            onChange={(e) => setContactInfo({ ...contactInfo, whatsappMessage: e.target.value })}
+            required
+            rows={3}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red"
+            placeholder="Hello! I would like to inquire about your luxury chauffeur services."
+          />
+          <p className="text-sm text-gray-600 mt-1">
+            Pre-filled message that appears when users click the WhatsApp chat button
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            This message will be automatically sent when customers click the chat button
+          </p>
+        </div>
+
+        <div>
           <label htmlFor="address" className="block text-gray-700 font-semibold mb-2">
             Address *
           </label>
@@ -183,6 +206,7 @@ export default function ContactSettingsPage() {
             <p><strong>Email:</strong> {contactInfo.email}</p>
             <p><strong>Phone:</strong> {contactInfo.phone}</p>
             <p><strong>WhatsApp:</strong> {contactInfo.whatsapp}</p>
+            <p><strong>Chat Message:</strong> {contactInfo.whatsappMessage || 'Not set'}</p>
             <p><strong>Address:</strong> {contactInfo.address}</p>
           </div>
         </div>
