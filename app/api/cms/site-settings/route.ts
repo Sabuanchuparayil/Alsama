@@ -4,6 +4,10 @@ import { authOptions } from '@/lib/auth-config';
 import { prisma } from '@/lib/db/prisma';
 import { z } from 'zod';
 
+// Route segment config
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 const contactInfoSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().min(1, 'Phone number is required'),

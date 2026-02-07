@@ -64,12 +64,24 @@ export default function ContactSettingsPage() {
           window.dispatchEvent(new CustomEvent('contactInfoUpdated'));
         }
       } else {
-        const errorData = await res.json();
-        setError(errorData.error || 'Failed to save contact information');
+        // Try to parse JSON error, but handle HTML responses
+        let errorMessage = 'Failed to save contact information';
+        try {
+          const errorData = await res.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch (parseError) {
+          // If response is not JSON (e.g., HTML error page), use status text
+          errorMessage = `Error ${res.status}: ${res.statusText || 'Method not allowed'}`;
+        }
+        setError(errorMessage);
       }
     } catch (error) {
       console.error('Save error:', error);
-      setError('Failed to save contact information');
+      if (error instanceof Error) {
+        setError(`Failed to save: ${error.message}`);
+      } else {
+        setError('Failed to save contact information');
+      }
     } finally {
       setSaving(false);
     }
