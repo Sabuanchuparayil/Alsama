@@ -165,7 +165,7 @@ export default function ContactSettingsPage() {
 
         <div>
           <label htmlFor="whatsappMessage" className="block text-gray-700 font-semibold mb-2">
-            WhatsApp Chat Message *
+            WhatsApp Chat Message
           </label>
           <textarea
             id="whatsappMessage"
