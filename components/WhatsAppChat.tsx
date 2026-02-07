@@ -48,11 +48,11 @@ export default function WhatsAppChat({
 
   if (!isVisible || !whatsappNumber) return null;
 
-  // Position: bottom-right with spacing to avoid menu overlap
-  // On mobile, position higher to avoid Book Now button
+  // Position: bottom-right with proper z-index to avoid menu overlap
+  // Header is z-50, so chat should be z-40
   const positionClasses = position === 'bottom-right' 
-    ? 'bottom-6 right-6 md:bottom-6' 
-    : 'bottom-6 left-6 md:bottom-6';
+    ? 'bottom-6 right-6' 
+    : 'bottom-6 left-6';
 
   return (
     <div className={`fixed ${positionClasses} z-40 transition-all duration-300 ${isScrolled ? 'scale-110' : 'scale-100'}`}>
