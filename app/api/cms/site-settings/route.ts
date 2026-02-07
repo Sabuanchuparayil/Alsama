@@ -14,7 +14,8 @@ const contactInfoSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     // Get contact info setting
-    const contactInfo = await prisma.siteSettings.findUnique({
+    // Use findFirst to handle cases where record might not exist yet
+    const contactInfo = await prisma.siteSettings.findFirst({
       where: { key: 'contact_info' },
     });
 
@@ -31,8 +32,8 @@ export async function GET(request: NextRequest) {
     const parsedValue = JSON.parse(contactInfo.value);
     
     const response = NextResponse.json(parsedValue);
-    // Cache for 5 minutes
-    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    // Cache for 1 minute only, to allow quick updates
+    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
     return response;
   } catch (error) {
     console.error('Get site settings error:', error);

@@ -21,16 +21,43 @@ export function useContactInfo(): ContactInfo {
   const [contactInfo, setContactInfo] = useState<ContactInfo>(defaultContactInfo);
 
   useEffect(() => {
-    fetch('/api/cms/site-settings')
-      .then((res) => res.json())
-      .then((data) => {
+    // Fetch with cache-busting to ensure fresh data
+    const fetchContactInfo = async () => {
+      try {
+        // Add timestamp to bust cache
+        const timestamp = Date.now();
+        const res = await fetch(`/api/cms/site-settings?t=${timestamp}`, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        });
+        const data = await res.json();
         if (data && data.email) {
           setContactInfo(data);
         }
-      })
-      .catch(() => {
+      } catch (error) {
+        console.error('Failed to fetch contact info:', error);
         // Use default on error
-      });
+      }
+    };
+
+    fetchContactInfo();
+    
+    // Listen for updates from admin panel
+    const handleUpdate = () => {
+      fetchContactInfo();
+    };
+    
+    window.addEventListener('contactInfoUpdated', handleUpdate);
+    
+    // Refresh every 30 seconds to catch updates
+    const interval = setInterval(fetchContactInfo, 30000);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('contactInfoUpdated', handleUpdate);
+    };
   }, []);
 
   return contactInfo;

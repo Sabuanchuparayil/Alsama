@@ -57,6 +57,12 @@ export default function ContactSettingsPage() {
         setSuccess(true);
         setTimeout(() => setSuccess(false), 3000);
         router.refresh();
+        
+        // Force refresh of contact info on frontend
+        // Dispatch a custom event to notify all components
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('contactInfoUpdated'));
+        }
       } else {
         const errorData = await res.json();
         setError(errorData.error || 'Failed to save contact information');
