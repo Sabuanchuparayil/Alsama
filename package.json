@@ -9,6 +9,7 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "create-admin": "tsx scripts/create-admin.ts",
+    "update-admin-password": "tsx scripts/update-admin-password.ts",
     "seed-homepage": "tsx scripts/seed-homepage-sections.ts",
     "migrate": "prisma migrate deploy",
     "migrate:dev": "prisma migrate dev",
