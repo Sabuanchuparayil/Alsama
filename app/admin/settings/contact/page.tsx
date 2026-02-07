@@ -171,7 +171,6 @@ export default function ContactSettingsPage() {
             id="whatsappMessage"
             value={contactInfo.whatsappMessage || ''}
             onChange={(e) => setContactInfo({ ...contactInfo, whatsappMessage: e.target.value })}
-            required
             rows={3}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red"
             placeholder="Hello! I would like to inquire about your luxury chauffeur services."
