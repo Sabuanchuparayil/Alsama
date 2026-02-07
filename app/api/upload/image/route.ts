@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth-config';
-import { createClient } from '@supabase/supabase-js';
+import { v2 as cloudinary } from 'cloudinary';
 import { prisma } from '@/lib/db/prisma';
 
 export async function POST(request: NextRequest) {
@@ -29,45 +29,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File too large (max 5MB)' }, { status: 400 });
     }
 
-    // Use Supabase Storage if configured
-    if (process.env.SUPABASE_URL && process.env.SUPABASE_KEY) {
-      const supabase = createClient(
-        process.env.SUPABASE_URL,
-        process.env.SUPABASE_KEY
-      );
-
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-      const bucket = process.env.SUPABASE_STORAGE_BUCKET || 'alsama-images';
+    // Configure Cloudinary if credentials are provided
+    if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+      cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+      });
 
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
+      const base64 = buffer.toString('base64');
+      const dataUri = `data:${file.type};base64,${base64}`;
 
-      const { data, error } = await supabase.storage
-        .from(bucket)
-        .upload(fileName, buffer, {
-          contentType: file.type,
-          upsert: false,
+      try {
+        const result = await cloudinary.uploader.upload(dataUri, {
+          folder: 'alsama',
+          resource_type: 'image',
+          transformation: [
+            { quality: 'auto' },
+            { fetch_format: 'auto' },
+          ],
         });
 
-      if (error) {
-        return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 });
+        // Save to media table
+        const media = await prisma.media.create({
+          data: {
+            url: result.secure_url,
+            filename: result.public_id,
+            type: 'image',
+          },
+        });
+
+        return NextResponse.json({ url: result.secure_url, id: media.id });
+      } catch (cloudinaryError) {
+        console.error('Cloudinary upload error:', cloudinaryError);
+        return NextResponse.json({ error: 'Failed to upload image to Cloudinary' }, { status: 500 });
       }
-
-      const { data: { publicUrl } } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(fileName);
-
-      // Save to media table
-      const media = await prisma.media.create({
-        data: {
-          url: publicUrl,
-          filename: fileName,
-          type: 'image',
-        },
-      });
-
-      return NextResponse.json({ url: publicUrl, id: media.id });
     }
 
     // Fallback: Save to local public directory (for development/testing)
@@ -106,8 +104,9 @@ export async function POST(request: NextRequest) {
     
     // Production fallback: Return error with helpful message
     return NextResponse.json({
-      error: 'Image storage not configured. Please set SUPABASE_URL and SUPABASE_KEY environment variables, or use a cloud storage service like AWS S3, Cloudinary, or similar.',
-      hint: 'For Railway deployment, configure Supabase Storage or add a cloud storage service.',
+      error: 'Image storage not configured. Please set Cloudinary environment variables.',
+      hint: 'Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to Railway variables. Sign up for free at https://cloudinary.com',
+      setupGuide: 'See IMAGE_STORAGE_SETUP.md for detailed instructions.',
     }, { status: 500 });
   } catch (error) {
     console.error('Upload error:', error);
