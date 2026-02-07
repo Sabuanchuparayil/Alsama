@@ -24,6 +24,7 @@ export default function BookNowButton() {
       className="fixed bottom-32 md:bottom-28 right-6 z-40 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-5 py-3 md:px-6 md:py-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 hover:shadow-red-500/50 flex items-center space-x-2 md:space-x-3 group animate-pulse hover:animate-none"
       style={{
         boxShadow: '0 10px 40px rgba(220, 38, 38, 0.4)',
+        animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       }}
     >
       <svg 
