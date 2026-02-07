@@ -13,6 +13,7 @@
     "migrate": "prisma migrate deploy",
     "migrate:dev": "prisma migrate dev",
     "check-setup": "tsx scripts/check-setup.ts",
+    "verify-cloudinary": "tsx scripts/verify-cloudinary.ts",
     "clean": "rm -rf .next node_modules package-lock.json tsconfig.tsbuildinfo",
     "clean-install": "npm run clean && npm install"
   },
