@@ -80,6 +80,16 @@ export default function AdminSidebar() {
           >
             📞 Contact Info
           </Link>
+          <Link
+            href="/admin/settings/password"
+            className={`block px-4 py-2 rounded-md transition text-sm ${
+              isActive('/admin/settings/password')
+                ? 'bg-luxury-red text-white'
+                : 'text-gray-300 hover:bg-luxury-dark hover:text-white'
+            }`}
+          >
+            🔐 Change Password
+          </Link>
         </div>
       </nav>
 
