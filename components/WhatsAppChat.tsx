@@ -51,9 +51,12 @@ export default function WhatsAppChat({
   const positionClasses = position === 'bottom-right' 
     ? 'bottom-6 right-6' 
     : 'bottom-6 left-6';
+  
+  // Adjust position on mobile to avoid menu overlap
+  const mobileAdjustment = 'md:bottom-6';
 
   return (
-    <div className={`fixed ${positionClasses} z-50 transition-all duration-300 ${isScrolled ? 'scale-110' : 'scale-100'}`}>
+    <div className={`fixed ${positionClasses} z-40 transition-all duration-300 ${isScrolled ? 'scale-110' : 'scale-100'}`}>
       {/* Chat Bubble */}
       <div className="bg-white rounded-lg shadow-lg p-4 mb-3 max-w-xs border border-gray-200 relative animate-fade-in">
         <button

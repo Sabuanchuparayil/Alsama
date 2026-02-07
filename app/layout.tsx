@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import WhatsAppChat from '@/components/WhatsAppChat';
+import BookNowButton from '@/components/BookNowButton';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -66,6 +67,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <LayoutWrapper>{children}</LayoutWrapper>
+        <BookNowButton />
         <WhatsAppChat 
           message="Hello! I would like to inquire about your luxury chauffeur services."
           position="bottom-right"
