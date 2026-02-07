@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { contactInfo } from '@/lib/data';
+import { useContactInfo } from '@/lib/contact-info';
 
 interface WhatsAppChatProps {
   phoneNumber?: string;
@@ -12,11 +12,13 @@ interface WhatsAppChatProps {
 }
 
 export default function WhatsAppChat({ 
-  phoneNumber = contactInfo.whatsapp, 
+  phoneNumber, 
   message = 'Hello! I would like to inquire about your luxury chauffeur services.',
   position = 'bottom-right',
   showOnMobile = true 
 }: WhatsAppChatProps) {
+  const contactInfo = useContactInfo();
+  const whatsappNumber = phoneNumber || contactInfo.whatsapp;
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -35,7 +37,7 @@ export default function WhatsAppChat({
 
   const handleWhatsAppClick = () => {
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${phoneNumber.replace(/\D/g, '')}?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   };
 

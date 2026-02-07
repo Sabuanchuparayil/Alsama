@@ -67,6 +67,20 @@ export default function AdminSidebar() {
             📋 Bookings
           </Link>
         </div>
+
+        <div className="pt-4">
+          <p className="px-4 text-xs text-gray-500 uppercase tracking-wider mb-2">Settings</p>
+          <Link
+            href="/admin/settings/contact"
+            className={`block px-4 py-2 rounded-md transition text-sm ${
+              isActiveGroup('/admin/settings')
+                ? 'bg-luxury-red text-white'
+                : 'text-gray-300 hover:bg-luxury-dark hover:text-white'
+            }`}
+          >
+            📞 Contact Info
+          </Link>
+        </div>
       </nav>
 
       <div className="p-4 border-t border-gray-700 space-y-2">

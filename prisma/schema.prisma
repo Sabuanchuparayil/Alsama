@@ -147,3 +147,14 @@ model HomepageSection {
 
   @@map("homepage_sections")
 }
+
+model SiteSettings {
+  id          String   @id @default(cuid())
+  key         String   @unique // 'contact_info', 'social_media', etc.
+  value       String   @db.Text // JSON string for complex data
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+  @@index([key])
+}
