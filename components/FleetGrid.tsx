@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Vehicle } from '@/lib/data';
 
 interface FleetGridProps {
@@ -76,9 +77,12 @@ export default function FleetGrid({ vehicles }: FleetGridProps) {
             <div className="p-6">
               <h3 className="text-xl font-semibold text-gray-800 mb-2">{vehicle.name}</h3>
               <p className="text-gray-600 mb-4 text-sm leading-relaxed">{vehicle.description}</p>
-              <button className="w-full bg-luxury-black text-white py-2 rounded-md hover:bg-luxury-red transition font-medium">
+              <Link
+                href={`/fleet/${vehicle.id}`}
+                className="block w-full bg-luxury-black text-white py-2 rounded-md hover:bg-luxury-red transition font-medium text-center"
+              >
                 View Details
-              </button>
+              </Link>
             </div>
           </div>
         ))}
