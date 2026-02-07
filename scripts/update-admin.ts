@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function updateAdmin() {
   const oldEmail = 'admin@alsama.ae';
   const newEmail = 'mail@jsabu.com';
-  const newPassword = 'Abcd!1234';
+  const newPassword = process.env.ADMIN_PASSWORD || 'Admin @1234';
   
   try {
     // Find existing admin user
