@@ -55,16 +55,16 @@ export default function WhatsAppChat({
     : 'bottom-6 left-6';
 
   return (
-    <div className={`fixed ${positionClasses} z-40 transition-all duration-300 ${isScrolled ? 'scale-110' : 'scale-100'}`}>
+    <div className={`fixed ${positionClasses} z-40 transition-all duration-300 ${isScrolled ? 'scale-110' : 'scale-100'}`} onClick={(e) => e.stopPropagation()}>
       {/* Chat Bubble */}
-      <div className="bg-white rounded-lg shadow-lg p-4 mb-3 max-w-xs border border-gray-200 relative animate-fade-in">
+      <div className="bg-white rounded-lg shadow-lg p-4 mb-3 max-w-xs border border-gray-200 relative animate-fade-in" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             handleClose();
           }}
-          className="absolute top-2 right-2 text-gray-400 hover:text-gray-800 hover:bg-gray-100 rounded-full p-1 transition-all duration-200 z-50 cursor-pointer"
+          className="absolute top-2 right-2 text-gray-400 hover:text-gray-800 hover:bg-gray-100 rounded-full p-1.5 transition-all duration-200 z-50 cursor-pointer flex items-center justify-center"
           aria-label="Close chat"
           type="button"
         >
