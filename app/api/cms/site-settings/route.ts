@@ -12,7 +12,7 @@ const contactInfoSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().min(1, 'Phone number is required'),
   whatsapp: z.string().min(1, 'WhatsApp number is required'),
-  whatsappMessage: z.string().min(1, 'WhatsApp message is required').optional(),
+  whatsappMessage: z.string().optional(),
   address: z.string().min(1, 'Address is required'),
 });
 
