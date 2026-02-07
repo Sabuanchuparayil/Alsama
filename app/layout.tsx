@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   title: 'AL SAMA - Luxury Chauffeur & Tourism',
   description: 'Experience Dubai in unmatched luxury. Premium chauffeur services and exclusive vehicle rentals tailored for you.',
   keywords: 'luxury chauffeur, Dubai tourism, car rental, premium vehicles, airport transfers',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/icon.svg',
+  },
   openGraph: {
     title: 'AL SAMA - Luxury Chauffeur & Tourism',
     description: 'Experience Dubai in unmatched luxury. Premium chauffeur services and exclusive vehicle rentals tailored for you.',
