@@ -71,28 +71,13 @@ export default function FooterClient() {
             </ul>
           </div>
 
-          {/* Special Services */}
+          {/* Services */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Special Services</h4>
+            <h4 className="text-lg font-semibold mb-4">Services</h4>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <Link href="/services/airport-transfers" className="hover:text-luxury-red transition">
-                  Airport Transfers
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/city-tours" className="hover:text-luxury-red transition">
-                  City Tours
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/corporate-hire" className="hover:text-luxury-red transition">
-                  Corporate Solutions
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/wedding-services" className="hover:text-luxury-red transition">
-                  Wedding Chauffeurs
+                <Link href="/services" className="hover:text-luxury-red transition">
+                  All Services
                 </Link>
               </li>
               <li>

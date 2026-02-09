@@ -15,19 +15,26 @@ interface Service {
 
 async function getService(slug: string): Promise<Service | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/cms/services`, {
-      cache: 'no-store',
+    // Use direct database query instead of API call for better reliability
+    const { prisma } = await import('@/lib/db/prisma');
+    
+    const service = await prisma.service.findFirst({
+      where: {
+        slug: slug,
+        isActive: true,
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        imageUrl: true,
+        features: true,
+        isActive: true,
+      },
     });
     
-    if (!res.ok) {
-      return null;
-    }
-    
-    const services: Service[] = await res.json();
-    const service = services.find(s => s.slug === slug && s.isActive);
-    
-    return service || null;
+    return service;
   } catch (error) {
     console.error('Failed to fetch service:', error);
     return null;
