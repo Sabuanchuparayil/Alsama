@@ -81,6 +81,10 @@ export default function NewServicePage() {
       });
 
       if (res.ok) {
+        // Dispatch event to notify frontend components to refresh
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('servicesUpdated'));
+        }
         router.push('/admin/content/services');
       } else {
         const error = await res.json();

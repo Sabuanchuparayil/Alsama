@@ -51,7 +51,10 @@ export async function PUT(
       data,
     });
 
-    return NextResponse.json(service);
+    const response = NextResponse.json(service);
+    // Clear cache by setting no-cache headers
+    response.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return response;
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });
@@ -77,7 +80,10 @@ export async function DELETE(
       where: { id: params.id },
     });
 
-    return NextResponse.json({ message: 'Service deleted' });
+    const response = NextResponse.json({ message: 'Service deleted' });
+    // Clear cache by setting no-cache headers
+    response.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return response;
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });

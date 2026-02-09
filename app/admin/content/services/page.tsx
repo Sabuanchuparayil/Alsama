@@ -48,6 +48,10 @@ export default function ServicesPage() {
       });
 
       if (res.ok) {
+        // Dispatch event to notify frontend components to refresh
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('servicesUpdated'));
+        }
         fetchServices();
       } else {
         alert('Failed to delete service');

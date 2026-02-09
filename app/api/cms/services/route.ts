@@ -32,8 +32,8 @@ export async function GET() {
     });
     
     const response = NextResponse.json(services);
-    // Cache for 5 minutes, revalidate in background
-    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    // Reduced cache time to 1 minute for faster updates
+    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
     return response;
   } catch (error) {
     // Return empty array on database error for frontend compatibility
@@ -55,7 +55,10 @@ export async function POST(request: NextRequest) {
       data,
     });
 
-    return NextResponse.json(service, { status: 201 });
+    const response = NextResponse.json(service, { status: 201 });
+    // Clear cache by setting no-cache headers
+    response.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return response;
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });
