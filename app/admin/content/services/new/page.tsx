@@ -67,14 +67,42 @@ export default function NewServicePage() {
     setSaving(true);
 
     try {
+      // Validate required fields
+      if (!formData.title.trim()) {
+        alert('Title is required');
+        setSaving(false);
+        return;
+      }
+
+      const slug = formData.slug.trim() || generateSlug(formData.title);
+      if (!slug) {
+        alert('Slug is required');
+        setSaving(false);
+        return;
+      }
+
+      // Prepare imageUrl - only include if it's a valid URL, otherwise null
+      let imageUrl: string | null = null;
+      if (formData.imageUrl && formData.imageUrl.trim()) {
+        try {
+          // Validate URL format
+          new URL(formData.imageUrl.trim());
+          imageUrl = formData.imageUrl.trim();
+        } catch {
+          alert('Please enter a valid image URL or leave it empty');
+          setSaving(false);
+          return;
+        }
+      }
+
       const res = await fetch('/api/cms/services', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          title: formData.title,
-          slug: formData.slug || generateSlug(formData.title),
-          description: formData.description || null,
-          imageUrl: formData.imageUrl || null,
+          title: formData.title.trim(),
+          slug: slug,
+          description: formData.description.trim() || null,
+          imageUrl: imageUrl,
           features: formData.features.filter(f => f.trim()),
           isActive: formData.isActive,
         }),
@@ -88,10 +116,14 @@ export default function NewServicePage() {
         router.push('/admin/content/services');
       } else {
         const error = await res.json();
-        alert(`Error: ${JSON.stringify(error.error) || 'Failed to create service'}`);
+        const errorMessage = error.error 
+          ? (Array.isArray(error.error) ? error.error.map((e: any) => e.message || e).join(', ') : JSON.stringify(error.error))
+          : 'Failed to create service';
+        alert(`Error: ${errorMessage}`);
       }
-    } catch {
-      alert('Failed to create service');
+    } catch (error) {
+      console.error('Create service error:', error);
+      alert('Failed to create service. Please try again.');
     } finally {
       setSaving(false);
     }

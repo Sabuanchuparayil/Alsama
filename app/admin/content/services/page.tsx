@@ -72,9 +72,12 @@ export default function ServicesPage() {
         <h1 className="text-3xl font-bold text-gray-800">Services</h1>
         <Link
           href="/admin/content/services/new"
-          className="red-gradient text-white px-6 py-2 rounded-md hover:shadow-md transition-all"
+          className="red-gradient text-white px-6 py-3 rounded-md hover:shadow-lg transition-all font-semibold flex items-center gap-2"
         >
-          Add New Service
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Create New Service
         </Link>
       </div>
 
@@ -85,8 +88,11 @@ export default function ServicesPage() {
           </svg>
           <h3 className="text-lg font-semibold text-gray-600 mb-2">No services yet</h3>
           <p className="text-gray-500 mb-4">Add your first service to get started.</p>
-          <Link href="/admin/content/services/new" className="text-luxury-red hover:underline font-medium">
-            Add Service →
+          <Link 
+            href="/admin/content/services/new" 
+            className="inline-block red-gradient text-white px-6 py-3 rounded-md hover:shadow-lg transition-all font-semibold"
+          >
+            Create Your First Service →
           </Link>
         </div>
       ) : (
