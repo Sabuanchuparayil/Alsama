@@ -2,7 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import ServiceCard from './ServiceCard';
-import { Service, services as defaultServices } from '@/lib/data';
+
+interface Service {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  features: string[];
+  image: string;
+}
 
 interface DatabaseService {
   id: string;
@@ -19,8 +27,7 @@ interface ServicesClientProps {
 }
 
 export default function ServicesClient({ limit }: ServicesClientProps) {
-  const fallback = limit ? defaultServices.slice(0, limit) : defaultServices;
-  const [services, setServices] = useState<Service[]>(fallback);
+  const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchServices = async () => {
@@ -36,10 +43,12 @@ export default function ServicesClient({ limit }: ServicesClientProps) {
       const data: DatabaseService[] = await res.json();
       
       if (!Array.isArray(data)) {
-        setServices(fallback);
+        console.error('Invalid services data received:', data);
+        setServices([]);
         setLoading(false);
         return;
       }
+      
       // Convert database services to component Service format
       const convertedServices: Service[] = data
         .filter((s) => s.isActive && s.slug)
@@ -52,13 +61,13 @@ export default function ServicesClient({ limit }: ServicesClientProps) {
           image: s.imageUrl || '',
         }));
       
-      // Use API data if available, otherwise use defaults
-      const result = convertedServices.length > 0 ? convertedServices : defaultServices;
-      setServices(limit ? result.slice(0, limit) : result);
+      // Only show services from database - no hardcoded fallback
+      setServices(limit ? convertedServices.slice(0, limit) : convertedServices);
       setLoading(false);
     } catch (error) {
       console.error('Failed to fetch services:', error);
-      setServices(fallback);
+      // Show empty array on error - no hardcoded fallback
+      setServices([]);
       setLoading(false);
     }
   };
@@ -83,7 +92,21 @@ export default function ServicesClient({ limit }: ServicesClientProps) {
   }, [limit]);
 
   if (loading) {
-    return <div className="text-center py-12">Loading services...</div>;
+    return <div className="text-center py-12 text-gray-600">Loading services...</div>;
+  }
+
+  if (services.length === 0) {
+    return (
+      <div className="col-span-full text-center py-12">
+        <div className="text-gray-500">
+          <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          <p className="text-lg font-medium">No services available at the moment</p>
+          <p className="text-sm mt-2">Please check back later or contact us for more information</p>
+        </div>
+      </div>
+    );
   }
 
   return (

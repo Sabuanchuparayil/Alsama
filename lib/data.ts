@@ -81,60 +81,8 @@ export const vehicles: Vehicle[] = [
   },
 ];
 
-export const services: Service[] = [
-  {
-    id: '1',
-    title: 'Airport Transfers',
-    slug: 'airport-transfers',
-    description: 'Seamless airport transfers with professional chauffeurs. We ensure timely arrivals and departures with luxury vehicles.',
-    features: [
-      'Flight monitoring',
-      'Meet & greet service',
-      'Luggage assistance',
-      '24/7 availability',
-    ],
-    image: '', // Image will be managed via CMS
-  },
-  {
-    id: '2',
-    title: 'City Tours',
-    slug: 'city-tours',
-    description: 'Explore Dubai in comfort and style with our guided city tours. Experience the best of Dubai with knowledgeable chauffeurs.',
-    features: [
-      'Customized itineraries',
-      'Professional guides',
-      'Flexible scheduling',
-      'Premium vehicles',
-    ],
-    image: '', // Image will be managed via CMS
-  },
-  {
-    id: '3',
-    title: 'Corporate Hire',
-    slug: 'corporate-hire',
-    description: 'Professional transportation solutions for your business needs. Reliable service for executives and corporate events.',
-    features: [
-      'Executive transportation',
-      'Event transportation',
-      'Long-term contracts',
-      'Dedicated account manager',
-    ],
-    image: '', // Image will be managed via CMS
-  },
-  {
-    id: '4',
-    title: 'Wedding Services',
-    slug: 'wedding-services',
-    description: 'Make your special day unforgettable with our luxury wedding transportation services.',
-    features: [
-      'Decorated vehicles',
-      'Professional chauffeurs',
-      'Multiple vehicle options',
-      'Special packages',
-    ],
-    image: '', // Image will be managed via CMS
-  },
-];
+// Services are now managed entirely through the CMS
+// No hardcoded services - all data comes from the database
 
 export const contactInfo = {
   email: 'info@alsama.ae',
