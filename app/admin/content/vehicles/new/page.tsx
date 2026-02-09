@@ -1,22 +1,49 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+
+interface FleetType {
+  id: string;
+  name: string;
+  isActive: boolean;
+}
 
 export default function NewVehiclePage() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [fleetTypes, setFleetTypes] = useState<FleetType[]>([]);
   const [formData, setFormData] = useState({
     name: '',
-    category: 'Sedan' as 'SUV' | 'Sedan' | 'Sports',
+    category: '',
     description: '',
     imageUrl: '',
     price: '',
     features: [''],
     isActive: true,
   });
+
+  useEffect(() => {
+    fetchFleetTypes();
+  }, []);
+
+  const fetchFleetTypes = async () => {
+    try {
+      const res = await fetch('/api/cms/fleet-types');
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        const activeTypes = data.filter((ft: FleetType) => ft.isActive);
+        setFleetTypes(activeTypes);
+        if (activeTypes.length > 0 && !formData.category) {
+          setFormData({ ...formData, category: activeTypes[0].name });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch fleet types:', error);
+    }
+  };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -102,14 +129,37 @@ export default function NewVehiclePage() {
         </div>
 
         <div>
-          <label htmlFor="category" className="block text-gray-700 font-semibold mb-2">Category *</label>
-          <select id="category" value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value as 'SUV' | 'Sedan' | 'Sports' })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red">
-            <option value="Sedan">Sedan</option>
-            <option value="SUV">SUV</option>
-            <option value="Sports">Sports</option>
+          <label htmlFor="category" className="block text-gray-700 font-semibold mb-2">
+            Category *
+            <Link href="/admin/content/fleet-types/new" className="ml-2 text-sm text-luxury-red hover:underline">
+              (Add New Type)
+            </Link>
+          </label>
+          <select
+            id="category"
+            required
+            value={formData.category}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red"
+            disabled={fleetTypes.length === 0}
+          >
+            {fleetTypes.length === 0 ? (
+              <option value="">No fleet types available. Please add one first.</option>
+            ) : (
+              fleetTypes.map((type) => (
+                <option key={type.id} value={type.name}>
+                  {type.name}
+                </option>
+              ))
+            )}
           </select>
+          {fleetTypes.length === 0 && (
+            <p className="text-sm text-gray-500 mt-1">
+              <Link href="/admin/content/fleet-types/new" className="text-luxury-red hover:underline">
+                Create your first fleet type
+              </Link>
+            </p>
+          )}
         </div>
 
         <div>

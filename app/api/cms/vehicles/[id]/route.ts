@@ -7,7 +7,7 @@ import { Prisma } from '@prisma/client';
 
 const vehicleSchema = z.object({
   name: z.string().min(1).optional(),
-  category: z.enum(['SUV', 'Sedan', 'Sports']).optional(),
+  category: z.string().min(1).optional(), // Now accepts any string from fleet types
   description: z.string().optional().nullable(),
   imageUrl: z.string().url().optional().nullable().or(z.literal('')).transform(val => val === '' ? null : val),
   price: z.number().optional().nullable(),

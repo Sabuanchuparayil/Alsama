@@ -4,6 +4,12 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 
+interface FleetType {
+  id: string;
+  name: string;
+  isActive: boolean;
+}
+
 export default function EditVehiclePage() {
   const router = useRouter();
   const params = useParams();
@@ -12,9 +18,10 @@ export default function EditVehiclePage() {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [fleetTypes, setFleetTypes] = useState<FleetType[]>([]);
   const [formData, setFormData] = useState({
     name: '',
-    category: 'Sedan' as 'SUV' | 'Sedan' | 'Sports',
+    category: '',
     description: '',
     imageUrl: '',
     price: '',
@@ -23,8 +30,21 @@ export default function EditVehiclePage() {
   });
 
   useEffect(() => {
+    fetchFleetTypes();
     fetchVehicle();
   }, [vehicleId]);
+
+  const fetchFleetTypes = async () => {
+    try {
+      const res = await fetch('/api/cms/fleet-types');
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setFleetTypes(data.filter((ft: FleetType) => ft.isActive));
+      }
+    } catch (error) {
+      console.error('Failed to fetch fleet types:', error);
+    }
+  };
 
   const fetchVehicle = async () => {
     try {
@@ -139,13 +159,28 @@ export default function EditVehiclePage() {
         </div>
 
         <div>
-          <label htmlFor="category" className="block text-gray-700 font-semibold mb-2">Category *</label>
-          <select id="category" value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value as 'SUV' | 'Sedan' | 'Sports' })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red">
-            <option value="Sedan">Sedan</option>
-            <option value="SUV">SUV</option>
-            <option value="Sports">Sports</option>
+          <label htmlFor="category" className="block text-gray-700 font-semibold mb-2">
+            Category *
+            <Link href="/admin/content/fleet-types/new" className="ml-2 text-sm text-luxury-red hover:underline">
+              (Add New Type)
+            </Link>
+          </label>
+          <select
+            id="category"
+            required
+            value={formData.category}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red"
+          >
+            {fleetTypes.length === 0 ? (
+              <option value="">Loading...</option>
+            ) : (
+              fleetTypes.map((type) => (
+                <option key={type.id} value={type.name}>
+                  {type.name}
+                </option>
+              ))
+            )}
           </select>
         </div>
 

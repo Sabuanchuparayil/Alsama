@@ -7,7 +7,7 @@ import { Vehicle, vehicles as defaultVehicles } from '@/lib/data';
 interface DatabaseVehicle {
   id: string;
   name: string;
-  category: 'SUV' | 'Sedan' | 'Sports';
+  category: string; // Now dynamic, not limited to enum
   description: string | null;
   imageUrl: string | null;
   isActive: boolean;

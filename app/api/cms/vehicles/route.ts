@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 const vehicleSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  category: z.enum(['SUV', 'Sedan', 'Sports']),
+  category: z.string().min(1, 'Category is required'), // Now accepts any string from fleet types
   description: z.string().optional().nullable(),
   imageUrl: z.string().url().optional().nullable().or(z.literal('')).transform(val => val === '' ? null : val),
   price: z.number().optional().nullable(),

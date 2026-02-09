@@ -1,7 +1,7 @@
 export interface Vehicle {
   id: string;
   name: string;
-  category: 'SUV' | 'Sedan' | 'Sports';
+  category: string; // Dynamic - can be any fleet type name
   image: string;
   description: string;
 }

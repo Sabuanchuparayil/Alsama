@@ -158,3 +158,18 @@ model SiteSettings {
   @@map("site_settings")
   @@index([key])
 }
+
+model FleetType {
+  id          String   @id @default(cuid())
+  name        String   @unique // SUV, Sedan, Sports, Luxury, etc.
+  description String?  @db.Text
+  icon        String?  // Optional icon identifier
+  order       Int      @default(0) // For sorting
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("fleet_types")
+  @@index([name])
+  @@index([isActive])
+}

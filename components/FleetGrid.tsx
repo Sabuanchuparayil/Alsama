@@ -1,18 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Vehicle } from '@/lib/data';
+
+interface FleetType {
+  id: string;
+  name: string;
+  isActive: boolean;
+  order: number;
+}
 
 interface FleetGridProps {
   vehicles: Vehicle[];
 }
 
 export default function FleetGrid({ vehicles }: FleetGridProps) {
-  const [selectedCategory, setSelectedCategory] = useState<'All' | 'SUV' | 'Sedan' | 'Sports'>('All');
+  const [fleetTypes, setFleetTypes] = useState<FleetType[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  const categories = ['All', 'SUV', 'Sedan', 'Sports'] as const;
+  useEffect(() => {
+    fetch('/api/cms/fleet-types')
+      .then((res) => res.json())
+      .then((data: FleetType[]) => {
+        if (Array.isArray(data)) {
+          const activeTypes = data.filter(ft => ft.isActive).sort((a, b) => a.order - b.order);
+          setFleetTypes(activeTypes);
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to fetch fleet types:', error);
+      });
+  }, []);
+
+  const categories = ['All', ...fleetTypes.map(ft => ft.name)];
   
   const filteredVehicles = selectedCategory === 'All' 
     ? vehicles 

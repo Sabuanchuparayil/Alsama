@@ -1,0 +1,189 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import Link from 'next/link';
+
+export default function EditFleetTypePage() {
+  const router = useRouter();
+  const params = useParams();
+  const fleetTypeId = params.id as string;
+
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    icon: '',
+    order: 0,
+    isActive: true,
+  });
+
+  useEffect(() => {
+    fetchFleetType();
+  }, [fleetTypeId]);
+
+  const fetchFleetType = async () => {
+    try {
+      const res = await fetch(`/api/cms/fleet-types/${fleetTypeId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setFormData({
+          name: data.name || '',
+          description: data.description || '',
+          icon: data.icon || '',
+          order: data.order || 0,
+          isActive: data.isActive ?? true,
+        });
+      } else {
+        alert('Fleet type not found');
+        router.push('/admin/content/fleet-types');
+      }
+    } catch (error) {
+      console.error('Failed to load fleet type:', error);
+      alert('Failed to load fleet type');
+      router.push('/admin/content/fleet-types');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      alert('Name is required');
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      const res = await fetch(`/api/cms/fleet-types/${fleetTypeId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          description: formData.description.trim() || null,
+          icon: formData.icon.trim() || null,
+          order: formData.order,
+          isActive: formData.isActive,
+        }),
+      });
+
+      if (res.ok) {
+        router.push('/admin/content/fleet-types');
+      } else {
+        const error = await res.json();
+        alert(`Error: ${error.error || 'Failed to update fleet type'}`);
+      }
+    } catch (error) {
+      console.error('Failed to update fleet type:', error);
+      alert('Failed to update fleet type');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="text-center py-12">Loading...</div>;
+  }
+
+  return (
+    <div>
+      <div className="flex items-center gap-4 mb-8">
+        <Link href="/admin/content/fleet-types" className="text-gray-600 hover:text-gray-800">
+          ← Back
+        </Link>
+        <h1 className="text-3xl font-bold text-gray-800">Edit Fleet Type</h1>
+      </div>
+
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8 space-y-6 max-w-2xl">
+        <div>
+          <label htmlFor="name" className="block text-gray-700 font-semibold mb-2">
+            Name *
+          </label>
+          <input
+            type="text"
+            id="name"
+            required
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="description" className="block text-gray-700 font-semibold mb-2">
+            Description
+          </label>
+          <textarea
+            id="description"
+            rows={3}
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red"
+            placeholder="Brief description of this fleet type"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="icon" className="block text-gray-700 font-semibold mb-2">
+            Icon (Optional)
+          </label>
+          <input
+            type="text"
+            id="icon"
+            value={formData.icon}
+            onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red"
+            placeholder="Icon identifier (e.g. car, truck, motorcycle)"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="order" className="block text-gray-700 font-semibold mb-2">
+            Display Order
+          </label>
+          <input
+            type="number"
+            id="order"
+            min="0"
+            value={formData.order}
+            onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-luxury-red"
+          />
+        </div>
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="isActive"
+            checked={formData.isActive}
+            onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+            className="w-4 h-4 text-luxury-red border-gray-300 rounded focus:ring-luxury-red"
+          />
+          <label htmlFor="isActive" className="ml-2 text-gray-700">
+            Active (visible in vehicle category dropdown)
+          </label>
+        </div>
+
+        <div className="flex gap-4">
+          <button
+            type="submit"
+            disabled={saving}
+            className="flex-1 red-gradient text-white py-3 rounded-md font-semibold hover:shadow-lg transition-all disabled:opacity-50"
+          >
+            {saving ? 'Saving...' : 'Save Changes'}
+          </button>
+          <Link
+            href="/admin/content/fleet-types"
+            className="px-6 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition text-center"
+          >
+            Cancel
+          </Link>
+        </div>
+      </form>
+    </div>
+  );
+}
